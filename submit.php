@@ -1,6 +1,14 @@
+<!-- Here is using pure PHP for form validation because I still not familier with Laravel also -->
+
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'vendor/autoload.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate form fields
+
+    // ensure form fields
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $message = trim($_POST['message']);
@@ -10,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die('Please fill all required fields.');
     }
 
-    // Validate email
+    // check the email format and validate it
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         die('Invalid email format.');
     }
@@ -23,20 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $target_file = $target_dir . basename($file["name"]);
     $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-    // Check file type
-    $allowedTypes = ['jpg', 'png', 'jpeg', 'pdf', 'doc', 'docx'];
+    // Check file type is match the uploaded type
+    $allowedTypes = ['jpg', 'png', 'jpeg', 'pdf'];
     if (!in_array($fileType, $allowedTypes)) {
-        die('Only JPG, JPEG, PNG, PDF, DOC, and DOCX files are allowed.');
+        die('Sorry...! Only JPG, JPEG, PNG, PDF files are still allowed.');
     }
 
-    // Move file to target directory
+   
     if (!move_uploaded_file($file["tmp_name"], $target_file)) {
         die('Error uploading file.');
     }
 
-    // Prepare email
-    $to = 'your-email@example.com';
-    $subject = 'New Form Submission';
+    // Here I specify my email address to dent that submited data now
+    $to = 'warnasooriyacs1000@gmail.com'; //my email address was added in here for testing
+    $subject = 'Form submit from Backend Task intern';
     $body = "Name: $name\nEmail: $email\nMessage: $message\nFile: $target_file";
     $headers = "From: $email";
 
